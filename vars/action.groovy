@@ -1,17 +1,6 @@
-import groovy.transform.Field
+def call(conf) {
 
-@Field conf = [:]
-
-def call(script) {
-    this.conf = script
-	println "${this}: action invocation with param ${this.conf.inspect()}"
-	return this
+	println "${this}: action invocation with param ${conf.inspect()}"
+	conf.STRKEY = 'OVERWRITTEN'
 }
 
-def call() {
-	println "${this}: action invocation without param ${this.conf.inspect()}"
-}
-
-def otherAction() {		
-	println "${this}: config from within otherAction invocation: ${config.custom.inspect()}"
-}

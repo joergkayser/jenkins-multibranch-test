@@ -1,10 +1,15 @@
-//@Library ('cd') _
-
 flow {
-  //BOOLKEY = false  
-  PR = {        
+  BOOLKEY = false
+
+  PR = { conf ->
     println "pr started"
-    action()
+    println "${conf.inspect()}"
+    action(conf)
     println "pr done"
+  }
+
+  RELEASE = {
+    println "release started"
+    println "release done"
   }
 }

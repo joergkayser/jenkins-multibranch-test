@@ -1,25 +1,26 @@
 @NonCPS
-def handleConfig(cfg){
-    for (c in config.custom.keySet()){            
-        if (cfg[c] == null) {
-            println "   Kept ${c} to its default value: ${config.custom[c].inspect()}"
-        } else {
-            println "   Overwriting ${c} to ${cfg[c].inspect()}"
-            config.custom[c] = cfg[c]
+def handleConfig(override, defaults){
+    println "Default config:   ${defaults.inspect()}"
+    for (c in defaults.keySet()){
+        if (override[c] != null) {
+            defaults[c] = override[c]
         }
     }
+    println "Overriden config: ${defaults.inspect()}"
+    return defaults
 }
 
-def call(Closure body = {}) {    
-    def cfg = [:]
+def call(Closure body = {}) {
+
+    def customconfig = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
-    body.delegate = cfg
+    body.delegate = customconfig
     body()
 
-    config()
-    handleConfig(cfg)
+    def config = handleConfig(customconfig, defaultconfig())
     
-    lib = action (config.custom)
-    config.custom.PR.call()
-    action.otherAction()    
+    action (config)
+    config.PR.call(config)
+
+    println "After closure call config: ${config.inspect()}"
 }
